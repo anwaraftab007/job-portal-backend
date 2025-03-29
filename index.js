@@ -14,15 +14,15 @@ const app = express();
 
 // middleware
 app.use(express.json());
-app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
+app.use(express.urlencoded({extended:true}));
 app.use(
     cors({
       origin: ["https://job-portal-dev01.netlify.app", "http://localhost:5173"], // Allow both production & local dev
       methods: "GET,POST,PUT,DELETE",
       credentials: true,
     })
-  );
+  );  
 
 const PORT = process.env.PORT || 3000;
 

@@ -8,15 +8,25 @@ export const postJob = async (req, res) => {
 
         if (!title || !description || !requirements || !salary || !location || !jobType || !experience || !position || !companyId) {
             return res.status(400).json({
-                message: "Somethin is missing.",
+                message: "Something is missing.",
                 success: false
-            })
-        };
+            });
+        }
+
+        // Check if salary is a valid number
+        const parsedSalary = Number(salary);
+        if (isNaN(parsedSalary)) {
+            return res.status(400).json({
+                message: "Invalid salary value. Salary must be a number.",
+                success: false
+            });
+        }
+
         const job = await Job.create({
             title,
             description,
             requirements: requirements.split(","),
-            salary: Number(salary),
+            salary: parsedSalary,
             location,
             jobType,
             experienceLevel: experience,
@@ -24,6 +34,7 @@ export const postJob = async (req, res) => {
             company: companyId,
             created_by: userId
         });
+
         return res.status(201).json({
             message: "New job created successfully.",
             job,
@@ -31,8 +42,13 @@ export const postJob = async (req, res) => {
         });
     } catch (error) {
         console.log(error);
+        res.status(500).json({
+            message: "Internal Server Error",
+            success: false
+        });
     }
-}
+};
+
 // student k liye
 export const getAllJobs = async (req, res) => {
     try {
